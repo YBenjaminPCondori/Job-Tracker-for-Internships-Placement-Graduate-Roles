@@ -1,0 +1,2 @@
+run_id,method,job_title,company,location,deadline,job_type,degree_required,key_skills,application_url,source_url,timestamp,notes
+run_example,browseros,Example Role,Example Company,Example City,2026-12-31,Graduate scheme,Example degree,"Example skill one, Example skill two",https://example.com/jobs/example-role,https://example.com/careers,2026-07-05T12:00:00Z,Dummy format example only

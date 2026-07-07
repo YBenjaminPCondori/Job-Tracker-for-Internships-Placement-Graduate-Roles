@@ -1,0 +1,4 @@
+run_id,method,job_title,company,location,deadline,job_type,degree_required,key_skills,application_url,source_url,timestamp,notes
+run_001,browseros,Graduate Software Engineer,Example Engineering Ltd,London,2026-11-30,Graduate scheme,Computer Science or related degree,"Python, SQL, teamwork",https://example.com/jobs/graduate-software-engineer,https://example.com/careers/engineering,2026-07-05T10:00:00Z,Dummy record
+run_001,browseros,Junior Data Analyst,Sample Analytics PLC,Manchester,,Entry level,Any numerate degree,"Excel, SQL",https://example.com/jobs/junior-data-analyst,https://example.com/careers/data,2026-07-05T10:02:00Z,Dummy record with no deadline
+run_001,browseros,Engineering Intern,Fictional Systems Ltd,,,Internship,,,,https://example.com/careers/engineering,2026-07-05T10:03:00Z,Dummy record with intentionally missing fields

@@ -1,0 +1,4 @@
+title,company,location,status,deadline,source,application_url,notes
+Graduate Software Engineer,Example Engineering Ltd,London,Found,2026-11-30,Gradcracker / BrowserOS,https://example.com/jobs/graduate-software-engineer,"Degree required: Computer Science or related degree | Key skills: Python, SQL, teamwork | Notes: Dummy record"
+Junior Data Analyst,Sample Analytics PLC,Manchester,Found,,Gradcracker / BrowserOS,https://example.com/jobs/junior-data-analyst,"Degree required: Any numerate degree | Key skills: Excel, SQL | Notes: Dummy record with no deadline"
+Engineering Intern,Fictional Systems Ltd,,Found,,Gradcracker / BrowserOS,,Notes: Dummy record with intentionally missing fields

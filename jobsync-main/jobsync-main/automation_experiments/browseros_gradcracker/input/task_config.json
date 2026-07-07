@@ -1,0 +1,24 @@
+{
+  "experiment_name": "browseros_gradcracker",
+  "run_id": "run_001",
+  "authorised_domains": [
+    "example.com"
+  ],
+  "output_filename": "run_001_raw.csv",
+  "output_schema": [
+    "run_id",
+    "method",
+    "job_title",
+    "company",
+    "location",
+    "deadline",
+    "job_type",
+    "degree_required",
+    "key_skills",
+    "application_url",
+    "source_url",
+    "timestamp",
+    "notes"
+  ],
+  "notes": "Dummy configuration only. BrowserOS runs separately and writes its exported CSV into browseros_output."
+}

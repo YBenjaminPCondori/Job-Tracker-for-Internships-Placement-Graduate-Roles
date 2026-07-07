@@ -1,0 +1,8 @@
+2026-07-05 20:20:37,080 | INFO | Starting BrowserOS processing for run ID: run_001
+2026-07-05 20:20:37,081 | INFO | Reading raw export: browseros_output\run_001_raw.csv
+2026-07-05 20:20:37,106 | INFO | Validation passed: 4 row(s), 13 required column(s)
+2026-07-05 20:20:37,136 | INFO | Cleaning complete: removed 1 duplicate row(s)
+2026-07-05 20:20:37,178 | INFO | Saved cleaned data: processed\run_001_clean.csv
+2026-07-05 20:20:37,178 | INFO | Saved metrics: processed\run_001_metrics.csv
+2026-07-05 20:20:37,180 | INFO | Saved job-tracker bridge export: exports\job_tracker_import_ready.csv
+2026-07-05 20:20:37,181 | INFO | Finished: 4 raw role(s), 3 unique role(s), 60.00% complete
