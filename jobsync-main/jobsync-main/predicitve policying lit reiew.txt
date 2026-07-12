@@ -1,0 +1,36 @@
+Neighborhood, Crime, Crime & Neighborhood, Crime density
+
+Spatial clustering, Spatial correlation, Hot spot analysis, Census demographic analysis
+
+Human behavior analysis, Criminal behavior analysis, Facial expression analysis, Activity analysis, POI interest, Surveillance
+
+Feature selection, Predictive policing, Qualitative, Convergence, Frequent pattern
+
+Object/image analysis, Tweets, Text, Social media
+
+
+Robbery: the act of unlawfully removing the property from a person or place through force or fear of force.
+
+Burglary: the act in which someone enters a building with the intent of stealing, injuring someone, or causing harm.
+
+Theft: taking something that belongs to someone else and holding it dishonestly.
+
+Rape: using abuse or aggressive behavior to coerce others into having sexual relations with them against their will.
+
+Vandalism: the act of causing intentional harm or destruction to public or private property, or damaging public property.
+
+Trafficking: the act of dealing or trading in illegal substances.
+
+Assault: the act of physical attack.
+
+Murder/Homicides: the act of taking someone's life through violence.
+
+Techniques
+Classification ML utilizes an algorithm to classify and categorize test data, such as differentiating dogs from cats. Another example from the real world is identifying spam emails and categorizing them into a separate folder in your mail. Support vector machines, decision trees, random forests, and linear classifiers are examples of classification ML algorithms.
+Regression ML is another form of supervised learning that utilizes an algorithm to establish a relationship among dependent and independent variables. Furthermore, regression models are constructed for predicting numerical values. Logistic regression, polynomial regression, and linear regression are examples of regression ML algorithms.
+
+Clustering is an unlabeled data grouping strategy based on similarities or differences. For instance, the K-means algorithm allocates similar data points into clusters (groups), with the K value being the group size.
+Association is another unsupervised form of ML that uses various rules to obtain links between variables within a dataset.
+Dimensionality reduction is a training strategy used when a given dataset has a high number of features (or dimensions). The data input is reduced to a manageable size, and data integrity is also preserved.
+
+Random Forest and Naive Bayes
