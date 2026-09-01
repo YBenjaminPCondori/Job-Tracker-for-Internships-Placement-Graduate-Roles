@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { ReactElement, ReactNode } from "react";
 import { sanitizeFilename } from "@/components/profile/resume-pdf";
 
 // DOMParser is available in jsdom (vitest environment)
@@ -47,7 +48,8 @@ describe("htmlToPdfNodes", () => {
   it("produces a node for a <p> tag", () => {
     const nodes = htmlToPdfNodes("<p>Hello world</p>");
     expect(nodes).toHaveLength(1);
-    expect(nodes[0].props?.children).toContain("Hello world");
+    const node = nodes[0] as ReactElement<{ children?: ReactNode }>;
+    expect(node.props.children).toContain("Hello world");
   });
 
   it("applies both bold and italic for <strong><em> nesting", () => {

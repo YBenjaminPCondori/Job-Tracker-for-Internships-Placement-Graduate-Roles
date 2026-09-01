@@ -329,8 +329,13 @@ export const getActivityTypeList = async (
       }),
     ]);
 
-    const durationMap = new Map(
-      durationSums.map((d) => [d.activityTypeId, d._sum.duration ?? 0]),
+    const durationMap = new Map<string, number>(
+      durationSums.map(
+        (d: { activityTypeId: string; _sum: { duration: number | null } }) => [
+          d.activityTypeId,
+          d._sum.duration ?? 0,
+        ],
+      ),
     );
 
     // Fetch all activity types with counts, then sort by total duration

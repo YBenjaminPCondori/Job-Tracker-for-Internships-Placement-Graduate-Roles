@@ -17,6 +17,8 @@
     "@ai-sdk/openai": "^3.0.2",
     "@ai-sdk/react": "^3.0.5",
     "@hookform/resolvers": "^5.2.2",
+    "@neon/config": "^1.1.0",
+    "@neon/env": "^1.1.6",
     "@nivo/bar": "^0.99.0",
     "@nivo/calendar": "^0.99.0",
     "@nivo/core": "^0.99.0",

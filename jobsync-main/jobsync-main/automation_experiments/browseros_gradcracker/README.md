@@ -6,11 +6,11 @@ Python and exports a CSV file here. Python only validates and processes that
 export; it does not launch a browser, scrape a site, or write to the JobSync
 database.
 
-There is currently no deep integration with the JobSync frontend or backend.
-The boundary between this experiment and the main application is a clean
-CSV/JSON import/export contract. A future change may add a JobSync import button
-or API endpoint, but this module currently makes no API calls and has no
-application-side effects.
+There is no deep integration with the JobSync frontend or backend. The boundary
+between this experiment and the main application is a clean CSV/JSON
+import/export contract. JobSync includes a lightweight CSV upload importer on
+the **My Jobs** page for `exports/job_tracker_import_ready.csv`; this module
+still makes no API calls and has no application-side effects by itself.
 
 All committed records use `example.com` and are dummy data. They do not contain
 real Gradcracker data.
@@ -30,10 +30,9 @@ browseros_gradcracker/
 └── README.md
 ```
 
-`future_import_format.csv` is a provisional example of the cleaned file contract.
-JobSync does not import it yet. If JSON is used for a future integration, it
-should expose the same field names and represent each CSV row as one JSON
-object.
+`future_import_format.csv` is a provisional example of the cleaned file
+contract. If JSON is used for a future integration, it should expose the same
+field names and represent each CSV row as one JSON object.
 
 ## BrowserOS export schema
 
@@ -87,7 +86,7 @@ automation_experiments/browseros_gradcracker/exports/job_tracker_import_ready.cs
 
 If `--run-id` is omitted, it defaults to `run_001`.
 
-The file in `exports` is a lightweight bridge for future integration. It is
+The file in `exports` is a lightweight bridge for JobSync import. It is
 overwritten with the latest successfully processed run and contains:
 
 ```text
@@ -97,7 +96,19 @@ title,company,location,status,deadline,source,application_url,notes
 `title` comes from `job_title`, `status` is always `Found`, and `source` is
 always `Gradcracker / BrowserOS`. The notes field combines the degree
 requirement, key skills, and original BrowserOS notes with readable labels.
-This CSV is not connected to the JobSync database or API.
+This CSV is not pushed directly into the JobSync database by the Python
+pipeline. To import it, sign in to JobSync, open **My Jobs**, click **Import**,
+and upload:
+
+```text
+automation_experiments/browseros_gradcracker/exports/job_tracker_import_ready.csv
+```
+
+The JobSync importer creates normal draft job records, marks them as unapplied,
+creates missing title/company/location/source lookup records as needed, stores
+the combined notes, and skips duplicates using title, company, and application
+URL. It does not run BrowserOS, scrape pages, or automate browser access from
+Python.
 
 ## Processing rules
 

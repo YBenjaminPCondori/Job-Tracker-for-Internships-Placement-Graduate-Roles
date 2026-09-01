@@ -5,6 +5,17 @@ import { runAutomation } from "@/lib/scraper";
 
 let scheduledTask: ScheduledTask | null = null;
 
+function isSchedulerEnabled(): boolean {
+  if (process.env.SCHEDULER_ENABLED === "false") return false;
+  if (process.env.VERCEL && process.env.SCHEDULER_ENABLED !== "true") return false;
+  return SCHEDULER_CONSTANTS.ENABLED;
+}
+
+function getSchedulerTimezone(): string {
+  const timezone = process.env.TZ?.trim();
+  return timezone ? timezone.replace(/^:/, "") : "UTC";
+}
+
 async function runDueAutomations() {
   const now = new Date();
   console.log(`[Scheduler] Checking for due automations at ${now.toISOString()}`);
@@ -71,8 +82,8 @@ async function runDueAutomations() {
 }
 
 export function startScheduler() {
-  if (!SCHEDULER_CONSTANTS.ENABLED) {
-    console.log("[Scheduler] Disabled via SCHEDULER_CONSTANTS.ENABLED");
+  if (!isSchedulerEnabled()) {
+    console.log("[Scheduler] Disabled");
     return;
   }
 
@@ -91,7 +102,7 @@ export function startScheduler() {
   console.log(`[Scheduler] Starting with schedule: ${cronExpression}`);
 
   scheduledTask = cron.schedule(cronExpression, runDueAutomations, {
-    timezone: process.env.TZ || "UTC",
+    timezone: getSchedulerTimezone(),
   });
 
   console.log("[Scheduler] Started successfully");

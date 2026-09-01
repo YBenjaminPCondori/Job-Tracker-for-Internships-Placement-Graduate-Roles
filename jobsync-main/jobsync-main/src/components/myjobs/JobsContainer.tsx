@@ -42,6 +42,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AddJob } from "./AddJob";
 import MyJobsTable from "./MyJobsTable";
 import { NoteDialog } from "./NoteDialog";
+import { BrowserOsImportButton } from "./BrowserOsImportButton";
 import { format } from "date-fns";
 import { RecordsPerPageSelector } from "../RecordsPerPageSelector";
 import { RecordsCount } from "../RecordsCount";
@@ -432,6 +433,7 @@ function JobsContainer({
                 Export
               </span>
             </Button>
+            <BrowserOsImportButton onImported={reloadJobs} />
             <AddJob
               jobStatuses={statuses}
               companies={companies}
