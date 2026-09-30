@@ -1,0 +1,47 @@
+# Vercel Web Analytics Installation
+
+## Summary
+Successfully installed and configured Vercel Web Analytics for the JobSync Next.js application by following the latest official Vercel documentation.
+
+## Changes Made
+
+### 1. Package Installation
+- **Installed**: `@vercel/analytics` (v2.0.1)
+- **Method**: Used npm (the project's package manager)
+- **Command**: `npm install @vercel/analytics`
+
+### 2. Configuration
+- **Modified File**: `src/app/layout.tsx`
+- **Changes**:
+  - Added import statement: `import { Analytics } from "@vercel/analytics/next";`
+  - Added `<Analytics />` component inside the `<body>` tag, after the ThemeProvider
+  - Followed Next.js App Router pattern as specified in the official documentation
+
+### 3. Implementation Details
+The Analytics component was placed strategically:
+- Inside the `<body>` tag to ensure proper tracking
+- After the main application content (children wrapped in ThemeProvider)
+- Following Next.js App Router best practices for the root layout
+
+### 4. Verification Steps Completed
+✅ **Build Test**: Successfully ran `npm run build` - production build completed without errors
+✅ **Linting**: Successfully ran `npm run lint` - no linting errors introduced
+✅ **Package Files**: Both `package.json` and `package-lock.json` properly updated
+⚠️ **Tests**: Existing test suite has pre-existing jsdom dependency issue (unrelated to this change)
+
+## Files Modified
+1. `package.json` - Added @vercel/analytics dependency
+2. `package-lock.json` - Updated with new dependency resolution
+3. `src/app/layout.tsx` - Added Analytics import and component
+
+## Next Steps
+To complete the setup:
+1. **Enable Analytics in Vercel Dashboard**: Navigate to your project settings in the Vercel dashboard and enable Web Analytics under the Analytics section
+2. **Deploy**: Deploy the application to Vercel using `vercel deploy` or push to your connected Git repository for automatic deployment
+3. **Verify**: After deployment, check browser's Network tab for requests to `/<unique-path>/view` when visiting pages
+
+## Technical Notes
+- Used framework-specific import path `@vercel/analytics/next` for optimal Next.js integration
+- Analytics component is automatically optimized for production builds
+- No additional configuration or environment variables required
+- Component will only send analytics data in production environments
