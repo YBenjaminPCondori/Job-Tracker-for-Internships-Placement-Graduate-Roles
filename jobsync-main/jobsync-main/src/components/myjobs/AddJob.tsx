@@ -1,4 +1,4 @@
-# Library Imports and Component Imports
+// Library Imports and Component Imports
 
 "use client";
 import {
@@ -8,7 +8,7 @@ import {
   DialogOverlay,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"; # Dialog Components
+} from "@/components/ui/dialog"; // Dialog Components
 import { addJob, updateJob } from "@/actions/job.actions";
 import { Loader, PlusCircle } from "lucide-react";
 import { Button } from "../ui/button";
@@ -25,7 +25,7 @@ import {
   JobStatus,
   JobTitle,
   Tag,
-} from "@/models/job.model"; # Job-related Models
+} from "@/models/job.model"; // Job-related Models
 import { addDays } from "date-fns";
 import { z } from "zod";
 import { toast } from "../ui/use-toast";
@@ -36,7 +36,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form"; # User Interface and Form Components
+} from "../ui/form"; // User Interface and Form Components
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import SelectFormCtrl from "../Select";
 import { DatePicker } from "../DatePicker";
@@ -53,7 +53,7 @@ import { getResumeList } from "@/actions/profile.actions";
 import { getCoverLetterList } from "@/actions/coverLetter.actions";
 import { TagInput } from "./TagInput";
 
-# Component Props Definition
+// Component Props Definition
 
 type AddJobProps = {
   jobStatuses: JobStatus[];

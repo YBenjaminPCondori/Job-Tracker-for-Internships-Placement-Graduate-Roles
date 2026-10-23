@@ -7,6 +7,8 @@ import { getCurrentUser } from "@/utils/user.utils";
 import { APP_CONSTANTS } from "@/lib/constants";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { paginateJobGroups } from "@/lib/job-grouping";
+import type { JobGroupingField } from "@/lib/job-grouping";
 
 export const getStatusList = async (): Promise<any | undefined> => {
   try {
@@ -46,6 +48,9 @@ export const getJobsList = async (
   titleValue?: string,
   locationValue?: string,
   sourceValue?: string,
+  dateAppliedFilter?: string,
+  matchFilter?: string,
+  groupingField: JobGroupingField = "none",
 ): Promise<any | undefined> => {
   try {
     const user = await getCurrentUser();
@@ -92,6 +97,50 @@ export const getJobsList = async (
       whereClause.applied = true;
     }
 
+    if (dateAppliedFilter) {
+      const now = new Date();
+      const startOfToday = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+      );
+
+      if (dateAppliedFilter === "no-date") {
+        whereClause.appliedDate = null;
+      } else {
+        const daysByFilter: Record<string, number> = {
+          today: 0,
+          "last-7-days": 6,
+          "last-30-days": 29,
+          "last-90-days": 89,
+        };
+        const days = daysByFilter[dateAppliedFilter];
+        if (days !== undefined) {
+          const from = new Date(startOfToday);
+          from.setDate(from.getDate() - days);
+          const range: { gte: Date; lt?: Date } = { gte: from };
+          if (dateAppliedFilter === "today") {
+            const tomorrow = new Date(startOfToday);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            range.lt = tomorrow;
+          }
+          whereClause.appliedDate = range;
+        }
+      }
+    }
+
+    if (matchFilter) {
+      const matchFilters: Record<string, Record<string, unknown> | null> = {
+        "excellent": { gte: 80 },
+        "good": { gte: 60, lt: 80 },
+        "low": { lt: 60 },
+        "unscored": null,
+      };
+      if (matchFilter in matchFilters) {
+        whereClause.matchScore = matchFilters[matchFilter];
+      }
+    }
+
     if (search) {
       const searchConditions: Record<string, any>[] = [];
       if (!titleValue) {
@@ -109,11 +158,31 @@ export const getJobsList = async (
       whereClause.OR = searchConditions;
     }
 
+    let pageJobIds: string[] | undefined;
+    if (groupingField !== "none") {
+      const groupableJobs = await prisma.job.findMany({
+        where: whereClause,
+        select: {
+          id: true,
+          Company: { select: { id: true, label: true } },
+          Location: { select: { id: true, label: true } },
+          JobTitle: { select: { id: true, label: true } },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      pageJobIds =
+        paginateJobGroups(groupableJobs, groupingField, limit)[page - 1] ?? [];
+    }
+
+    const pagedWhereClause = pageJobIds
+      ? { AND: [whereClause, { id: { in: pageJobIds } }] }
+      : whereClause;
+
     const [data, total] = await Promise.all([
       prisma.job.findMany({
-        where: whereClause,
-        skip,
-        take: limit,
+        where: pagedWhereClause,
+        skip: pageJobIds ? undefined : skip,
+        take: pageJobIds ? undefined : limit,
         select: {
           id: true,
           JobSource: true,

@@ -46,6 +46,7 @@ import { BrowserOsImportButton } from "./BrowserOsImportButton";
 import { format } from "date-fns";
 import { RecordsPerPageSelector } from "../RecordsPerPageSelector";
 import { RecordsCount } from "../RecordsCount";
+import type { JobGroupingField } from "@/lib/job-grouping";
 
 type MyJobsProps = {
   statuses: JobStatus[];
@@ -55,6 +56,12 @@ type MyJobsProps = {
   sources: JobSource[];
   tags: Tag[];
 };
+
+const isJobGroupingField = (value: string | null): value is JobGroupingField =>
+  value === "none" ||
+  value === "company" ||
+  value === "location" ||
+  value === "title";
 
 function JobsContainer({
   statuses,
@@ -67,14 +74,14 @@ function JobsContainer({
   const router = useRouter();
   const pathname = usePathname();
   const queryParams = useSearchParams();
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
+  const updateQueryFilter = useCallback(
+    (name: string, value: string | null) => {
       const params = new URLSearchParams(queryParams.toString());
-      params.set(name, value);
-
-      return params.toString();
+      if (value) params.set(name, value);
+      else params.delete(name);
+      router.push(`${pathname}${params.size ? `?${params.toString()}` : ""}`);
     },
-    [queryParams],
+    [pathname, queryParams, router],
   );
   const [companyFilter, setCompanyFilter] = useState<string | null>(
     queryParams.get("company"),
@@ -90,6 +97,16 @@ function JobsContainer({
   );
   const [appliedFilter, setAppliedFilter] = useState(
     queryParams.get("applied") === "true",
+  );
+  const [dateAppliedFilter, setDateAppliedFilter] = useState<string | null>(
+    queryParams.get("dateApplied"),
+  );
+  const [matchFilter, setMatchFilter] = useState<string | null>(
+    queryParams.get("match"),
+  );
+  const initialGrouping = queryParams.get("groupBy");
+  const [groupingField, setGroupingField] = useState<JobGroupingField>(
+    isJobGroupingField(initialGrouping) ? initialGrouping : "none",
   );
   const [jobs, setJobs] = useState<JobResponse[]>([]);
   const [page, setPage] = useState(1);
@@ -123,28 +140,51 @@ function JobsContainer({
     ? sources.find((s) => s.value === sourceFilter)?.label
     : null;
 
+  const dateAppliedLabels: Record<string, string> = {
+    today: "Applied today",
+    "last-7-days": "Applied in last 7 days",
+    "last-30-days": "Applied in last 30 days",
+    "last-90-days": "Applied in last 90 days",
+    "no-date": "No applied date",
+  };
+  const matchLabels: Record<string, string> = {
+    excellent: "Match: 80%+",
+    good: "Match: 60–79%",
+    low: "Match: below 60%",
+    unscored: "Match: not scored",
+  };
+
   const clearCompanyFilter = () => {
     setCompanyFilter(null);
-    setAppliedFilter(false);
-    router.push(pathname);
+    updateQueryFilter("company", null);
   };
 
   const clearTitleFilter = () => {
     setTitleFilter(null);
-    setAppliedFilter(false);
-    router.push(pathname);
+    updateQueryFilter("title", null);
   };
 
   const clearLocationFilter = () => {
     setLocationFilter(null);
-    setAppliedFilter(false);
-    router.push(pathname);
+    updateQueryFilter("location", null);
   };
 
   const clearSourceFilter = () => {
     setSourceFilter(null);
-    setAppliedFilter(false);
-    router.push(pathname);
+    updateQueryFilter("source", null);
+  };
+
+  const setFilterValue = (
+    name: "company" | "title" | "source" | "dateApplied" | "match",
+    value: string,
+  ) => {
+    const nextValue = value === "all" ? null : value;
+    if (name === "company") setCompanyFilter(nextValue);
+    if (name === "title") setTitleFilter(nextValue);
+    if (name === "source") setSourceFilter(nextValue);
+    if (name === "dateApplied") setDateAppliedFilter(nextValue);
+    if (name === "match") setMatchFilter(nextValue);
+    updateQueryFilter(name, nextValue);
   };
 
   useEffect(() => {
@@ -153,11 +193,17 @@ function JobsContainer({
     const lp = queryParams.get("location");
     const sp = queryParams.get("source");
     const ap = queryParams.get("applied") === "true";
+    const dap = queryParams.get("dateApplied");
+    const mp = queryParams.get("match");
+    const gp = queryParams.get("groupBy");
     setCompanyFilter(cp);
     setTitleFilter(tp);
     setLocationFilter(lp);
     setSourceFilter(sp);
     setAppliedFilter(ap);
+    setDateAppliedFilter(dap);
+    setMatchFilter(mp);
+    setGroupingField(isJobGroupingField(gp) ? gp : "none");
   }, [queryParams]);
 
   const jobsPerPage = recordsPerPage;
@@ -166,17 +212,34 @@ function JobsContainer({
     async (page: number, filter?: string, search?: string) => {
       if (page === 1) setInitialLoading(true);
       else setLoadingMore(true);
-      const { success, data, total, message } = await getJobsList(
-        page,
-        jobsPerPage,
-        filter,
-        search,
-        companyFilter || undefined,
-        appliedFilter || undefined,
-        titleFilter || undefined,
-        locationFilter || undefined,
-        sourceFilter || undefined,
-      );
+      const result =
+        dateAppliedFilter || matchFilter || groupingField !== "none"
+          ? await getJobsList(
+              page,
+              jobsPerPage,
+              filter,
+              search,
+              companyFilter || undefined,
+              appliedFilter || undefined,
+              titleFilter || undefined,
+              locationFilter || undefined,
+              sourceFilter || undefined,
+              dateAppliedFilter || undefined,
+              matchFilter || undefined,
+              groupingField,
+            )
+          : await getJobsList(
+              page,
+              jobsPerPage,
+              filter,
+              search,
+              companyFilter || undefined,
+              appliedFilter || undefined,
+              titleFilter || undefined,
+              locationFilter || undefined,
+              sourceFilter || undefined,
+            );
+      const { success, data, total, message } = result;
       if (success && data) {
         setJobs((prev) => (page === 1 ? data : [...prev, ...data]));
         setTotalJobs(total);
@@ -191,7 +254,17 @@ function JobsContainer({
       setInitialLoading(false);
       setLoadingMore(false);
     },
-    [jobsPerPage, companyFilter, appliedFilter, titleFilter, locationFilter, sourceFilter],
+    [
+      jobsPerPage,
+      companyFilter,
+      appliedFilter,
+      titleFilter,
+      locationFilter,
+      sourceFilter,
+      dateAppliedFilter,
+      matchFilter,
+      groupingField,
+    ],
   );
 
   const reloadJobs = useCallback(async () => {
@@ -259,7 +332,10 @@ function JobsContainer({
   };
 
   useEffect(() => {
-    (async () => await loadJobs(1))();
+    (async () =>
+      await loadJobs(1, filterKey, searchTerm || undefined))();
+    // Status and search changes load explicitly in their own handlers.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadJobs]);
 
   useEffect(() => {
@@ -316,6 +392,14 @@ function JobsContainer({
       setFilterKey(filterBy);
       loadJobs(1, filterBy, searchTerm || undefined);
     }
+  };
+
+  const onGroupingChange = (value: string) => {
+    if (!isJobGroupingField(value)) return;
+    setJobs([]);
+    setPage(1);
+    setGroupingField(value);
+    updateQueryFilter("groupBy", value === "none" ? null : value);
   };
 
   const downloadJobsList = async () => {
@@ -393,6 +477,24 @@ function JobsContainer({
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
+            {dateAppliedFilter && (
+              <button
+                onClick={() => setFilterValue("dateApplied", "all")}
+                className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2.5 py-1 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+              >
+                {dateAppliedLabels[dateAppliedFilter]}
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {matchFilter && (
+              <button
+                onClick={() => setFilterValue("match", "all")}
+                className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2.5 py-1 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+              >
+                {matchLabels[matchFilter]}
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
             <div className="relative flex-1 min-w-[140px] sm:flex-none">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -419,6 +521,100 @@ function JobsContainer({
                   <SelectItem value="rejected">Rejected</SelectItem>
                   <SelectItem value="PT">Part-time</SelectItem>
                 </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select
+              value={companyFilter ?? "all"}
+              onValueChange={(value) => setFilterValue("company", value)}
+            >
+              <SelectTrigger
+                aria-label="Filter by company"
+                className="w-[130px] h-8"
+              >
+                <SelectValue placeholder="Company" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All companies</SelectItem>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.value}>
+                    {company.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={titleFilter ?? "all"}
+              onValueChange={(value) => setFilterValue("title", value)}
+            >
+              <SelectTrigger
+                aria-label="Filter by title"
+                className="w-[130px] h-8"
+              >
+                <SelectValue placeholder="Title" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All titles</SelectItem>
+                {titles.map((title) => (
+                  <SelectItem key={title.id} value={title.value}>
+                    {title.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={dateAppliedFilter ?? "all"}
+              onValueChange={(value) => setFilterValue("dateApplied", value)}
+            >
+              <SelectTrigger
+                aria-label="Filter by date applied"
+                className="w-[145px] h-8"
+              >
+                <SelectValue placeholder="Date Applied" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Any applied date</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="last-7-days">Last 7 days</SelectItem>
+                <SelectItem value="last-30-days">Last 30 days</SelectItem>
+                <SelectItem value="last-90-days">Last 90 days</SelectItem>
+                <SelectItem value="no-date">No applied date</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={sourceFilter ?? "all"}
+              onValueChange={(value) => setFilterValue("source", value)}
+            >
+              <SelectTrigger
+                aria-label="Filter by source"
+                className="w-[125px] h-8"
+              >
+                <SelectValue placeholder="Source" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All sources</SelectItem>
+                {sources.map((source) => (
+                  <SelectItem key={source.id} value={source.value}>
+                    {source.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={matchFilter ?? "all"}
+              onValueChange={(value) => setFilterValue("match", value)}
+            >
+              <SelectTrigger
+                aria-label="Filter by match"
+                className="w-[130px] h-8"
+              >
+                <SelectValue placeholder="Match" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Any match</SelectItem>
+                <SelectItem value="excellent">80% and above</SelectItem>
+                <SelectItem value="good">60–79%</SelectItem>
+                <SelectItem value="low">Below 60%</SelectItem>
+                <SelectItem value="unscored">Not scored</SelectItem>
               </SelectContent>
             </Select>
             <Button
@@ -448,6 +644,25 @@ function JobsContainer({
           </div>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">
+              Group by
+            </span>
+            <Select value={groupingField} onValueChange={onGroupingChange}>
+              <SelectTrigger
+                aria-label="Group applications by"
+                className="h-10 w-full sm:h-8 sm:w-[150px]"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="company">Company</SelectItem>
+                <SelectItem value="location">Location</SelectItem>
+                <SelectItem value="title">Title</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           {initialLoading && <Loading />}
           {jobs.length > 0 && (
             <>
@@ -458,6 +673,8 @@ function JobsContainer({
                 editJob={onEditJob}
                 onChangeJobStatus={onChangeJobStatus}
                 onAddNote={onAddNote}
+                groupingField={groupingField}
+                searchActive={searchTerm.trim().length > 0}
               />
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mt-4">
                 <RecordsCount
