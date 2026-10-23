@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# JobSync Release & Docker Build Script
+# GradLaunch Release & Docker Build Script
 # Usage: ./release.sh [patch|minor|major|x.y.z]  (defaults to patch)
 
 set -e
@@ -12,7 +12,7 @@ NC='\033[0m'
 
 BUMP_TYPE="${1:-patch}"
 REGISTRY="ghcr.io"
-IMAGE_NAME="gsync/jobsync"
+IMAGE_NAME="${IMAGE_NAME:-ybenjaminpcondori/gradlaunch}"
 
 SEMVER_REGEX='^[0-9]+\.[0-9]+\.[0-9]+$'
 if [[ "$BUMP_TYPE" != "patch" && "$BUMP_TYPE" != "minor" && "$BUMP_TYPE" != "major" && ! "$BUMP_TYPE" =~ $SEMVER_REGEX ]]; then
@@ -21,7 +21,7 @@ if [[ "$BUMP_TYPE" != "patch" && "$BUMP_TYPE" != "minor" && "$BUMP_TYPE" != "maj
 fi
 
 echo -e "${YELLOW}========================================${NC}"
-echo -e "${YELLOW}JobSync Release Script${NC}"
+echo -e "${YELLOW}GradLaunch Release Script${NC}"
 echo -e "${YELLOW}========================================${NC}"
 echo ""
 
@@ -88,7 +88,7 @@ VERSION_NUMBER="${NEW_VERSION#v}"
 TODAY=$(date +%Y-%m-%d)
 
 if [ -n "$PREV_TAG" ]; then
-  COMPARE_URL="https://github.com/Gsync/jobsync/compare/${PREV_TAG}...${NEW_VERSION}"
+  COMPARE_URL="https://github.com/YBenjaminPCondori/Job-Tracker-for-Internships-Placement-Graduate-Roles/compare/${PREV_TAG}...${NEW_VERSION}"
   LOG_RANGE="${PREV_TAG}..HEAD"
 else
   COMPARE_URL=""
@@ -150,7 +150,7 @@ echo ""
 
 # Step 8: Login to GHCR and build
 echo -e "${GREEN}[8/10]${NC} Logging in to GHCR..."
-echo "$GITHUB_TOKEN" | docker login "$REGISTRY" -u gsync --password-stdin
+echo "$GITHUB_TOKEN" | docker login "$REGISTRY" -u "${GITHUB_ACTOR:-YBenjaminPCondori}" --password-stdin
 echo ""
 
 # Step 9: Build and push multi-arch image
@@ -159,10 +159,10 @@ MAJOR=$(echo "$VERSION_NUMBER" | cut -d. -f1)
 MINOR=$(echo "$VERSION_NUMBER" | cut -d. -f1-2)
 
 # Ensure buildx builder exists
-docker buildx inspect jobsync-builder >/dev/null 2>&1 || \
-  docker buildx create --name jobsync-builder --use
+docker buildx inspect gradlaunch-builder >/dev/null 2>&1 || \
+  docker buildx create --name gradlaunch-builder --use
 
-docker buildx use jobsync-builder
+docker buildx use gradlaunch-builder
 
 git archive HEAD | docker buildx build \
   --platform linux/amd64,linux/arm64 \

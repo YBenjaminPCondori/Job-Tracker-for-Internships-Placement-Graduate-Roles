@@ -3,6 +3,12 @@
 import { useRouter } from "next/navigation";
 import SigninForm from "./SigninForm";
 import SignupForm from "./SignupForm";
+import {
+  APP_NAME,
+  APP_TAGLINE,
+  UPSTREAM_PROJECT_NAME,
+  UPSTREAM_REPOSITORY_URL,
+} from "@/lib/branding";
 
 type AuthMode = "signin" | "signup";
 
@@ -17,10 +23,8 @@ export default function AuthCard({ mode }: AuthCardProps) {
     <div className="mx-auto w-full max-w-md px-4">
       {/* App branding */}
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight">JobSync</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Track your job search, powered by AI
-        </p>
+        <h1 className="text-3xl font-bold tracking-tight">{APP_NAME}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{APP_TAGLINE}</p>
       </div>
 
       {/* Tab toggle */}
@@ -71,6 +75,18 @@ export default function AuthCard({ mode }: AuthCardProps) {
           </>
         )}
       </div>
+      <p className="mt-5 text-center text-xs text-muted-foreground">
+        Based on the open-source{" "}
+        <a
+          href={UPSTREAM_REPOSITORY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-primary underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {UPSTREAM_PROJECT_NAME}
+        </a>{" "}
+        project by Gsync.
+      </p>
     </div>
   );
 }

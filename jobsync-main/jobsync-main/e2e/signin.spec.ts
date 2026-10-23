@@ -3,9 +3,9 @@ import { test, expect } from "@playwright/test";
 test("Signin page has title", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page).toHaveTitle("Sign In | JobSync");
+  await expect(page).toHaveTitle("Sign In | GradLaunch");
 
-  await expect(page.getByRole("heading", { name: "JobSync" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "GradLaunch" })).toBeVisible();
 
   await expect(
     page.getByRole("heading", { name: "Welcome back" }),

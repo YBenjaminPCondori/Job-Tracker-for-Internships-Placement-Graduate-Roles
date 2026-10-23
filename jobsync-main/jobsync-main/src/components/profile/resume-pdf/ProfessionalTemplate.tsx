@@ -37,7 +37,7 @@ export function ProfessionalResumeDocument({ resume, htmlNodes }: Props) {
   return (
     <Document
       author={`${ContactInfo?.firstName ?? ""} ${ContactInfo?.lastName ?? ""}`.trim()}
-      creator="jobsync.ca"
+      creator="GradLaunch"
       producer="react-pdf"
       title={resume.title}
     >

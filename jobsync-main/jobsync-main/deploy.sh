@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# JobSync Deployment Script
+# GradLaunch Deployment Script
 # Usage: ./deploy.sh [branch-name]
 # Example: ./deploy.sh main
 # Example: ./deploy.sh develop
@@ -18,7 +18,7 @@ DEFAULT_BRANCH="main"
 BRANCH="${1:-$DEFAULT_BRANCH}"
 
 echo -e "${YELLOW}========================================${NC}"
-echo -e "${YELLOW}JobSync Deployment Script${NC}"
+echo -e "${YELLOW}GradLaunch Deployment Script${NC}"
 echo -e "${YELLOW}========================================${NC}"
 echo ""
 
@@ -62,9 +62,8 @@ echo -e "${GREEN}[4/5]${NC} Stopping existing containers..."
 $COMPOSE_CMD down
 
 # Pull latest images and start containers
-echo -e "${GREEN}[5/5]${NC} Pulling latest images and starting containers..."
-$COMPOSE_CMD pull
-$COMPOSE_CMD up -d --force-recreate
+echo -e "${GREEN}[5/5]${NC} Building the latest image and starting containers..."
+$COMPOSE_CMD up -d --build --force-recreate
 
 echo ""
 echo -e "${GREEN}========================================${NC}"

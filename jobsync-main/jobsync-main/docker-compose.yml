@@ -1,7 +1,8 @@
 services:
   app:
-    image: ghcr.io/gsync/jobsync:latest
-    container_name: jobsync_app
+    build: .
+    image: gradlaunch:local
+    container_name: gradlaunch_app
     ports:
       - "3737:3737"
     environment:

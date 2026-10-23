@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import { APP_NAME } from "@/lib/branding";
 
 export const dynamic = "force-dynamic";
 
@@ -13,10 +14,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | JobSync",
-    default: "JobSync",
+    template: `%s | ${APP_NAME}`,
+    default: APP_NAME,
   },
-  description: "Job Application Tracking System",
+  description: "AI-powered graduate job application tracking system",
 };
 
 interface Props {

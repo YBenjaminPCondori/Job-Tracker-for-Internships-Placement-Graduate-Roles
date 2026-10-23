@@ -1,8 +1,10 @@
-# Job Search Assistant
+# GradLaunch
 
-Job Search is a web app companion for managing your job search journey. This free and open-source project is designed to help job seekers efficiently track and organize their job applications. Say goodbye to the chaos of scattered information and hello to a streamlined, intuitive, and powerful job search experience running locally on your system.
+GradLaunch is a free, open-source companion for managing graduate, placement, internship, and early-career job searches. It helps job seekers track applications, manage resumes, organize tasks, and evaluate opportunities with AI while retaining control of their data.
 
-Job searching can be overwhelming, with numerous applications to track and deadlines to meet. JobSeeker Assistant is here to simplify this process, allowing you to focus on big picture and keep track of your job search related activities. JobSync app platform empowers you with the tools you need to stay organized, informed, and proactive throughout your job search.
+GradLaunch is based on the open-source [JobSync](https://github.com/Gsync/jobsync) project by [Gsync](https://github.com/Gsync). The original application design and template are used under the included MIT License. Visit [jobsync.ca](https://jobsync.ca/) to learn more about the original project.
+
+**Repositories:** [GradLaunch source](https://github.com/YBenjaminPCondori/Job-Tracker-for-Internships-Placement-Graduate-Roles) · [Original JobSync source](https://github.com/Gsync/jobsync)
 
 ### Dashboard
 
@@ -14,11 +16,11 @@ Job searching can be overwhelming, with numerous applications to track and deadl
 
 ### AI Resume review
 
-![JobSync AI Demo](./screenshots/jobsync-ai.gif)
+![GradLaunch AI Demo](./screenshots/jobsync-ai.gif)
 
 ### AI Job match
 
-![JobSync AI Demo](./screenshots/jobsync-ai-jobmatch.gif)
+![GradLaunch AI Demo](./screenshots/jobsync-ai-jobmatch.gif)
 
 ### PDF Resume Export
 
@@ -37,7 +39,7 @@ Export any resume as a professionally formatted PDF directly from the resume pag
 
 
 ## Free to Use and Self-Hosted
-JobSync Assistant is completely free to use and open source. It provides a powerful job search management tool at no cost and ensures that everyone has access to the resources they need. Additionally, JobSeeker Assistant is designed to be self-hosted, giving you full control over your data. By using Docker, you can easily set up and run JobSync Assistant on your own server, ensuring a secure and personalized experience.
+GradLaunch is completely free to use and open source. It is designed to be self-hosted, giving you control over your job-search data. Docker provides a straightforward way to run GradLaunch on your own server.
 
 
 ## Quick Start
@@ -45,8 +47,8 @@ JobSync Assistant is completely free to use and open source. It provides a power
 Make sure [Docker](https://www.docker.com) is installed and running, then:
 
 ```sh
-git clone https://github.com/Gsync/jobsync.git
-cd jobsync
+git clone https://github.com/YBenjaminPCondori/Job-Tracker-for-Internships-Placement-Graduate-Roles.git
+cd Job-Tracker-for-Internships-Placement-Graduate-Roles/jobsync-main/jobsync-main
 docker compose up
 ```
 
@@ -68,7 +70,7 @@ Environment variables can be set in `docker-compose.yml`:
 From the project directory, run the deploy script to pull the latest changes and rebuild:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/Gsync/jobsync/main/deploy.sh | sudo bash -s
+curl -fsSL https://raw.githubusercontent.com/YBenjaminPCondori/Job-Tracker-for-Internships-Placement-Graduate-Roles/main/jobsync-main/jobsync-main/deploy.sh | sudo bash -s
 ```
 
 >Note: If you are updating in a homelab environment, edit `NEXTAUTH_URL` in your `.env` file to use your server IP address instead of `localhost`. See `.env.example` for the expected format.
@@ -78,6 +80,9 @@ curl -fsSL https://raw.githubusercontent.com/Gsync/jobsync/main/deploy.sh | sudo
 We welcome contributions! Please read our [Contributing Guidelines](./CONTRIBUTING.md) to get started. This project follows a [Code of Conduct](./CODE_OF_CONDUCT.md) — by participating, you agree to uphold its standards.
 
 ### Credits
+
+- [JobSync](https://github.com/Gsync/jobsync) by [Gsync](https://github.com/Gsync) — original application design and template, licensed under the [MIT License](./LICENSE); see the [attribution notice](./NOTICE.md)
+- [GradLaunch repository](https://github.com/YBenjaminPCondori/Job-Tracker-for-Internships-Placement-Graduate-Roles)
 
 - <a href="https://github.com/facebook/react">React</a>
 - <a href="https://github.com/vercel/next.js">Next</a>
@@ -153,9 +158,10 @@ Access a wide range of AI models from multiple providers through a single API.
 
 ## Support the Project
 
-If JobSync has been helpful in your job search, consider giving it a star on GitHub! It helps others discover the project and motivates continued development.
+If GradLaunch has been helpful in your job search, consider starring this repository. Please also support the original JobSync project that made this work possible.
 
-[![GitHub Stars](https://img.shields.io/github/stars/Gsync/jobsync?style=social)](https://github.com/Gsync/jobsync)
+[![GradLaunch GitHub Stars](https://img.shields.io/github/stars/YBenjaminPCondori/Job-Tracker-for-Internships-Placement-Graduate-Roles?style=social)](https://github.com/YBenjaminPCondori/Job-Tracker-for-Internships-Placement-Graduate-Roles)
+[![JobSync GitHub Stars](https://img.shields.io/github/stars/Gsync/jobsync?style=social)](https://github.com/Gsync/jobsync)
 
 Every star means a lot — thank you for your support!
 

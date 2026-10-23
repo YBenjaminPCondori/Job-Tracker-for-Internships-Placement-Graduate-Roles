@@ -1,5 +1,5 @@
 {
-  "name": "jobsync",
+  "name": "gradlaunch",
   "version": "1.1.12",
   "private": true,
   "scripts": {
