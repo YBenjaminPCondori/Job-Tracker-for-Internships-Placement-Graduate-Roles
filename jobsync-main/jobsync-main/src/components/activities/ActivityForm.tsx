@@ -161,7 +161,7 @@ const ActivityFormComponent = ({
                 </FormControl>
                 <FormMessage>
                   {errors.activityName && (
-                    <span className="text-red-500">
+                    <span className="form-error">
                       {errors.activityName?.message}
                     </span>
                   )}
@@ -216,7 +216,7 @@ const ActivityFormComponent = ({
                 </FormControl>
                 <FormMessage>
                   {errors.startTime && (
-                    <span className="text-red-500">
+                    <span className="form-error">
                       {errors.startTime?.message}
                     </span>
                   )}
@@ -270,7 +270,7 @@ const ActivityFormComponent = ({
                 </FormControl>
                 <FormMessage>
                   {errors.endTime && (
-                    <span className="text-red-500">
+                    <span className="form-error">
                       {errors.endTime?.message}
                     </span>
                   )}

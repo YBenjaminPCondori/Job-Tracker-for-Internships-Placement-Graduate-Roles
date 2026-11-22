@@ -97,7 +97,7 @@ export function Combobox({ options, field, creatable }: ComboboxProps) {
             variant="outline"
             role="combobox"
             className={cn(
-              "md:w-[240px] lg:w-[280px] justify-between capitalize",
+              "form-field w-full md:w-[240px] lg:w-[280px] justify-between capitalize focus-visible:ring-0",
               !field.value && "text-muted-foreground"
             )}
           >
@@ -108,7 +108,7 @@ export function Combobox({ options, field, creatable }: ComboboxProps) {
             {isPending ? (
               <Loader className="h-4 w-4 shrink-0 spinner" />
             ) : (
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0" />
             )}
           </Button>
         </FormControl>

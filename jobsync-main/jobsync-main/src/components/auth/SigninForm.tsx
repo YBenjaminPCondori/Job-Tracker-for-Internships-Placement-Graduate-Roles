@@ -87,36 +87,37 @@ function SigninForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel htmlFor="password">Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
+                    <div className="relative">
+                      <FormControl>
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
                           autoComplete="current-password"
+                          className="pr-11"
                           spellCheck={false}
                           autoCorrect="off"
                           autoCapitalize="off"
                           {...field}
                         />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 text-muted-foreground"
-                          onClick={() => setShowPassword((v) => !v)}
-                          aria-label={
-                            showPassword ? "Hide password" : "Show password"
-                          }
-                          tabIndex={-1}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4" aria-hidden="true" />
-                          ) : (
-                            <Eye className="h-4 w-4" aria-hidden="true" />
-                          )}
-                        </Button>
-                      </div>
-                    </FormControl>
+                      </FormControl>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 text-muted-foreground"
+                        onClick={() => setShowPassword((v) => !v)}
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
+                        tabIndex={-1}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Eye className="h-4 w-4" aria-hidden="true" />
+                        )}
+                      </Button>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -132,7 +133,7 @@ function SigninForm() {
             >
               {errorMessage && (
                 <>
-                  <p className="text-sm text-red-500">{errorMessage}</p>
+                  <p className="text-sm form-error">{errorMessage}</p>
                 </>
               )}
             </div>

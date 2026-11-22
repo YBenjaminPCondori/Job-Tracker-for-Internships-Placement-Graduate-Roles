@@ -138,7 +138,7 @@ function CreateResume({
                     </FormControl>
                     <FormMessage>
                       {errors.title && (
-                        <span className="text-red-500">
+                        <span className="form-error">
                           {errors.title.message}
                         </span>
                       )}
@@ -167,7 +167,7 @@ function CreateResume({
                     </FormControl>
                     <FormMessage>
                       {errors.file?.message && (
-                        <span className="text-red-500">
+                        <span className="form-error">
                           {errors.file.message}
                         </span>
                       )}

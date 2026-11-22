@@ -45,7 +45,7 @@ export function DatePicker({
           <Button
             variant={"outline"}
             className={cn(
-              "md:w-[240px] lg:w-[280px] justify-start text-left font-normal",
+              "form-field w-full md:w-[240px] lg:w-[280px] justify-start text-left font-normal focus-visible:ring-0",
               !field.value && "text-muted-foreground"
             )}
             disabled={!isEnabled}

@@ -127,7 +127,7 @@ function CreateCoverLetter({
                   </FormControl>
                   <FormMessage>
                     {errors.title && (
-                      <span className="text-red-500">
+                      <span className="form-error">
                         {errors.title.message}
                       </span>
                     )}
@@ -148,7 +148,7 @@ function CreateCoverLetter({
                   </FormControl>
                   <FormMessage>
                     {errors.content && (
-                      <span className="text-red-500">
+                      <span className="form-error">
                         {errors.content.message}
                       </span>
                     )}

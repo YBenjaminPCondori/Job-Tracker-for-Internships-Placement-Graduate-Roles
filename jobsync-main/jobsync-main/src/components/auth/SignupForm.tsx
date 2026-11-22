@@ -107,6 +107,7 @@ function SignupForm() {
                       <Input
                         type={showPassword ? "text" : "password"}
                         autoComplete="new-password"
+                        className="pr-11"
                         spellCheck={false}
                         autoCorrect="off"
                         autoCapitalize="off"
@@ -145,7 +146,7 @@ function SignupForm() {
             aria-atomic="true"
           >
             {errorMessage && (
-              <p className="text-sm text-red-500">{errorMessage}</p>
+              <p className="text-sm form-error">{errorMessage}</p>
             )}
           </div>
         </div>
